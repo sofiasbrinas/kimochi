@@ -17,6 +17,7 @@ export default function App() {
     format: null,
     status: null,
     genre: null,
+    episodeRange: null,
   });
 
   const featuredAnime = animeList[0];

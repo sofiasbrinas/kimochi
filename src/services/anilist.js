@@ -10,6 +10,8 @@ const ANIME_QUERY = `
     $tags: [String]
     $format: MediaFormat
     $status: MediaStatus
+    $episodeLesser: Int
+    $episodeGreater: Int
   ) {
     Page(page: $page, perPage: $perPage) {
       media(
@@ -19,6 +21,8 @@ const ANIME_QUERY = `
         tag_in: $tags
         format: $format
         status: $status
+        episodes_lesser: $episodeLesser
+        episodes_greater: $episodeGreater
         sort: SCORE_DESC
       ) {
         id
@@ -52,6 +56,22 @@ export async function getAnimeByMood(mood, filters) {
     ...(filters.genre ? [filters.genre] : []),
   ];
 
+  let episodeLesser;
+  let episodeGreater;
+
+  if(filters.episodeRange === 'SHORT') {
+    episodeLesser = 13;
+  }
+
+  if(filters.episodeRange === 'MEDIUM') {
+    episodeGreater = 12;
+    episodeLesser = 27;
+  }
+
+  if(filters.episodeRange === 'LONG') {
+    episodeGreater = 26;
+  }
+
   const variables = {
     page: 1,
     perPage: 12,
@@ -68,6 +88,9 @@ export async function getAnimeByMood(mood, filters) {
 
     format: filters.format || undefined,
     status: filters.status || undefined,
+
+    episodeLesser,
+    episodeGreater,
   };
 
   const response = await axios.post(ANILIST_URL, {

@@ -1,29 +1,60 @@
 .filter-panel {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  grid-template-areas:
+    'format status'
+    'genre genre'
+    'episodes episodes';
+
   gap: var(--space-4);
+
   margin: var(--space-5) 0;
 }
 
 .filter-panel__group {
   display: flex;
   flex-direction: column;
+
+  min-width: 0;
+
   gap: var(--space-2);
+}
+
+.filter-panel__group--format {
+  grid-area: format;
+}
+
+.filter-panel__group--status {
+  grid-area: status;
+}
+
+.filter-panel__group--genre {
+  grid-area: genre;
+}
+
+.filter-panel__group--episodes {
+  grid-area: episodes;
 }
 
 .filter-panel__label {
   color: var(--color-text-secondary);
 
   font-size: 0.85rem;
+  font-weight: 500;
 }
 
 .filter-panel__options {
   display: flex;
   flex-wrap: wrap;
+
   gap: var(--space-2);
 }
 
 .filter-panel__button {
+  min-height: 40px;
+
   padding: 8px 14px;
 
   border: 1px solid var(--color-border);
@@ -32,9 +63,24 @@
   background: transparent;
 
   color: var(--color-text-secondary);
+
+  white-space: nowrap;
+
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease;
+}
+
+.filter-panel__button:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+
+  color: var(--color-text-primary);
 }
 
 .filter-panel__button--active {
+  border-color: var(--color-text-primary);
+
   background: var(--color-text-primary);
 
   color: var(--color-background);

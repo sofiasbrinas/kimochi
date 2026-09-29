@@ -29,6 +29,13 @@ export default function FilterPanel({ filters, onChange }) {
     { label: 'Sobrenatural', value: 'Supernatural' },
   ];
 
+  const episodeRanges = [
+    { label: 'Qualquer', value: null },
+    { label: 'Curto', value: 'SHORT' },
+    { label: 'Médio', value: 'MEDIUM' },
+    { label: 'Longo', value: 'LONG' },
+  ];
+
   function handleFormatChange(format) {
     onChange({
       ...filters,
@@ -50,9 +57,16 @@ export default function FilterPanel({ filters, onChange }) {
     });
   }
 
+  function handleEpisodeRangeChange(episodeRange) {
+    onChange({
+      ...filters,
+      episodeRange,
+    });
+  }
+
   return (
     <section className='filter-panel'>
-      <div className='filter-panel__group'>
+      <div className='filter-panel__group filter-panel__group--format'>
         <p className='filter-panel__label'>
           Formato
         </p>
@@ -74,7 +88,7 @@ export default function FilterPanel({ filters, onChange }) {
         </div>
       </div>
 
-      <div className='filter-panel__group'>
+      <div className='filter-panel__group filter-panel__group--status'>
         <p className='filter-panel__label'>
           Status
         </p>
@@ -96,7 +110,7 @@ export default function FilterPanel({ filters, onChange }) {
         </div>
       </div>
 
-      <div className='filter-panel__group'>
+      <div className='filter-panel__group filter-panel__group--genre'>
         <p className='filter-panel__label'>
           Gênero
         </p>
@@ -113,6 +127,28 @@ export default function FilterPanel({ filters, onChange }) {
               onClick={() => handleGenreChange(genre.value)}
             >
               {genre.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className='filter-panel__group filter-panel__group--episodes'>
+        <p className='filter-panel__label'>
+          Quantidade de Episódios
+        </p>
+
+        <div className='filter-panel__options'>
+          {episodeRanges.map((range) => (
+            <button
+              key={range.label}
+              className={`filter-panel__button ${
+                filters.episodeRange === range.value
+                  ? 'filter-panel__button--active'
+                  : ''
+              }`}
+              onClick={() => handleEpisodeRangeChange(range.value)}
+            >
+              {range.label}
             </button>
           ))}
         </div>
