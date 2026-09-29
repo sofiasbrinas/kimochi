@@ -1,12 +1,11 @@
-// Este arquivo concentra os moods disponíveis no Kimochi.
-//
-// Separar esses dados dos componentes facilita a manutenção:
-// novos moods podem ser adicionados aqui sem modificar a interface.
+// Cada mood possui os filtros que serão enviados para a AniList.
+// Dessa forma, a lógica emocional do Kimochi fica centralizada
+// em um único arquivo e pode ser alterada facilmente depois.
 
 export const moods = [
   {
     id: 'comforting',
-    name:'Conforto',
+    name: 'Conforto',
     description: 'Histórias que acolhem',
     genres: ['Slice of Life'],
     tags: ['Iyashikei'],
@@ -64,7 +63,7 @@ export const moods = [
     id: 'nostalgic',
     name: 'Nostálgico',
     description: 'Para revisitar boas sensações',
-    genres: [],
+    genres: ['Slice of Life'],
     tags: [],
   },
 ];

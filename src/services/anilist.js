@@ -1,17 +1,26 @@
 import axios from 'axios';
 
-// Endereço oficial da API GraphQL da AniList
+// Endpoint oficial da API GraphQL da AniList.
 const ANILIST_URL = 'https://graphql.anilist.co';
 
-// Query simples para testar se a API está respondendo.
-// Vamos buscar 10 animes populares.
+// A query recebe gêneros e tags dinamicamente.
+//
+// Isso permite que diferentes moods utilizem
+// diferentes combinações de filtros.
 const ANIME_QUERY = `
-  query ($page: Int, $perPage: Int) {
+  query (
+    $page: Int
+    $perPage: Int
+    $genres: [String]
+    $tags: [String]
+  ) {
     Page(page: $page, perPage: $perPage) {
       media(
         type: ANIME
         isAdult: false
-        sort: POPULARITY_DESC
+        genre_in: $genres
+        tag_in: $tags
+        sort: SCORE_DESC
       ) {
         id
 
@@ -22,22 +31,40 @@ const ANIME_QUERY = `
 
         coverImage {
           large
+          color
         }
+
+        bannerImage
+
+        description
+
+        genres
 
         averageScore
 
         episodes
 
-        genres
+        duration
+
+        seasonYear
+
+        status
       }
     }
   }
 `;
 
-export async function getAnimeList() {
+// Busca animes utilizando os filtros definidos
+// no mood selecionado pelo usuário.
+export async function getAnimeByMood(mood) {
   const variables = {
     page: 1,
-    perPage: 10,
+    perPage: 12,
+
+    // Se não houver gêneros ou tags,
+    // enviamos undefined em vez de um array vazio.
+    genres: mood.genres.length > 0 ? mood.genres : undefined,
+    tags: mood.tags.length > 0 ? mood.tags : undefined,
   };
 
   const response = await axios.post(ANILIST_URL, {

@@ -1,21 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import MoodGrid from './components/MoodGrid/MoodGrid';
-import { moods } from "./data/moods";
-import { getAnimeList } from './services/anilist';
+import { moods } from './data/moods';
+import { getAnimeByMood } from './services/anilist';
 
 export default function App() {
   const [selectedMood, setSelectedMood] = useState(null);
   const [animeList, setAnimeList] = useState([]);
 
-  useEffect(() => {
-  async function loadAnime() {
-    const data = await getAnimeList();
+  async function handleMoodSelect(moodId) {
+    // Procura os dados completos do mood selecionado.
+    const mood = moods.find((item) => item.id === moodId);
 
-    setAnimeList(data);
+    // Atualiza o mood selecionado na interface.
+    setSelectedMood(moodId);
+
+    // Consulta a AniList usando os filtros desse mood.
+    const results = await getAnimeByMood(mood);
+
+    // Guarda as recomendações recebidas.
+    setAnimeList(results);
   }
-
-  loadAnime();
-}, []);
 
   return (
     <main>
@@ -26,13 +30,15 @@ export default function App() {
       <MoodGrid
         moods={moods}
         selectedMood={selectedMood}
-        onSelectMood={setSelectedMood}
+        onSelectMood={handleMoodSelect}
       />
 
-      <p>{animeList.length} animes encontrados</p>
-
       {selectedMood && (
-        <p>Mood selecionado: {selectedMood}</p>
+        <>
+          <p>Mood selecionado: {selectedMood}</p>
+
+          <p>{animeList.length} animes encontrados</p>
+        </>
       )}
     </main>
   );
