@@ -6,7 +6,8 @@
   grid-template-areas:
     'format status'
     'genre genre'
-    'episodes episodes';
+    'episodes duration'
+    'actions actions';
 
   gap: var(--space-4);
 
@@ -84,4 +85,34 @@
   background: var(--color-text-primary);
 
   color: var(--color-background);
+}
+
+.filter-panel__group--duration {
+  grid-area: duration;
+}
+
+.filter-panel__actions {
+  grid-area: actions;
+
+  display: flex;
+  justify-content: flex-end;
+}
+
+.filter-panel__clear {
+  min-height: 40px;
+
+  padding: 8px 16px;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+
+  background: transparent;
+
+  color: var(--color-text-secondary);
+}
+
+.filter-panel__clear:hover {
+  color: var(--color-text-primary);
+
+  border-color: rgba(255, 255, 255, 0.18);
 }

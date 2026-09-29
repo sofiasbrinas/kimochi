@@ -12,6 +12,8 @@ const ANIME_QUERY = `
     $status: MediaStatus
     $episodeLesser: Int
     $episodeGreater: Int
+    $durationLesser: Int
+    $durationGreater: Int
   ) {
     Page(page: $page, perPage: $perPage) {
       media(
@@ -23,6 +25,8 @@ const ANIME_QUERY = `
         status: $status
         episodes_lesser: $episodeLesser
         episodes_greater: $episodeGreater
+        duration_lesser: $durationLesser
+        duration_greater: $durationGreater
         sort: SCORE_DESC
       ) {
         id
@@ -51,25 +55,45 @@ const ANIME_QUERY = `
 `;
 
 export async function getAnimeByMood(mood, filters) {
+  // Combina os gêneros definidos pelo mood com o gênero
+  // adicional escolhido manualmente pelo usuário.
   const combinedGenres = [
     ...mood.genres,
     ...(filters.genre ? [filters.genre] : []),
   ];
 
+  // Limites usados para filtrar pela quantidade de episódios.
   let episodeLesser;
   let episodeGreater;
 
-  if(filters.episodeRange === 'SHORT') {
+  if (filters.episodeRange === 'SHORT') {
     episodeLesser = 13;
   }
 
-  if(filters.episodeRange === 'MEDIUM') {
+  if (filters.episodeRange === 'MEDIUM') {
     episodeGreater = 12;
     episodeLesser = 27;
   }
 
-  if(filters.episodeRange === 'LONG') {
+  if (filters.episodeRange === 'LONG') {
     episodeGreater = 26;
+  }
+
+  // Limites usados para filtrar pela duração de cada episódio.
+  let durationLesser;
+  let durationGreater;
+
+  if (filters.durationRange === 'SHORT') {
+    durationLesser = 15;
+  }
+
+  if (filters.durationRange === 'STANDARD') {
+    durationGreater = 14;
+    durationLesser = 31;
+  }
+
+  if (filters.durationRange === 'LONG') {
+    durationGreater = 30;
   }
 
   const variables = {
@@ -91,6 +115,9 @@ export async function getAnimeByMood(mood, filters) {
 
     episodeLesser,
     episodeGreater,
+
+    durationLesser,
+    durationGreater,
   };
 
   const response = await axios.post(ANILIST_URL, {

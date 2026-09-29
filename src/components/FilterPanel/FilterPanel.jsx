@@ -36,6 +36,13 @@ export default function FilterPanel({ filters, onChange }) {
     { label: 'Longo', value: 'LONG' },
   ];
 
+  const durationRanges = [
+    { label: 'Qualquer', value: null },
+    { label: 'Curto', value: 'SHORT' },
+    { label: 'Padrão', value: 'STANDARD' },
+    { label: 'Longo', value: 'LONG' },
+  ];
+
   function handleFormatChange(format) {
     onChange({
       ...filters,
@@ -61,6 +68,23 @@ export default function FilterPanel({ filters, onChange }) {
     onChange({
       ...filters,
       episodeRange,
+    });
+  }
+
+  function handleDurationRangeChange(durationRange) {
+    onChange({
+      ...filters,
+      durationRange,
+    });
+  }
+
+  function handleClearFilters() {
+    onChange({
+      format: null,
+      status: null,
+      genre: null,
+      episodeRange: null,
+      durationRange: null,
     });
   }
 
@@ -152,6 +176,37 @@ export default function FilterPanel({ filters, onChange }) {
             </button>
           ))}
         </div>
+      </div>
+
+      <div className='filter-panel__group filter-panel__group--duration'>
+        <p className='filter-panel__label'>
+          Duração por Episódio
+        </p>
+
+        <div className='filter-panel__options'>
+          {durationRanges.map((range) => (
+            <button
+              key={range.label}
+              className={`filter-panel__button ${
+                filters.durationRange === range.value
+                  ? 'filter-panel__button--active'
+                  : ''
+              }`}
+              onClick={() => handleDurationRangeChange(range.value)}
+            >
+              {range.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className='filter-panel__actions'>
+        <button
+          className='filter-panel__clear'
+          onClick={handleClearFilters}
+        >
+          Limpar filtros
+        </button>
       </div>
     </section>
   );
