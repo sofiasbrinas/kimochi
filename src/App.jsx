@@ -53,7 +53,9 @@ export default function App() {
           <FeaturedAnime 
             anime={featuredAnime}
   onSelect={setSelectedAnime} />
-          <AnimeGrid animeList={recommendations} />
+          <AnimeGrid 
+            animeList={recommendations}
+            onSelectAnime={setSelectedAnime} />
         </>
       )}
       {selectedAnime && (
