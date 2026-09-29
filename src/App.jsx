@@ -1,13 +1,26 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MoodGrid from './components/MoodGrid/MoodGrid';
-import { moods } from './data/moods';
+import { moods } from "./data/moods";
+import { getAnimeList } from './services/anilist';
 
 export default function App() {
   const [selectedMood, setSelectedMood] = useState(null);
+  const [animeList, setAnimeList] = useState([]);
+
+  useEffect(() => {
+  async function loadAnime() {
+    const data = await getAnimeList();
+
+    setAnimeList(data);
+  }
+
+  loadAnime();
+}, []);
 
   return (
     <main>
       <h1>Kimochi</h1>
+
       <p>O que você quer sentir?</p>
 
       <MoodGrid
@@ -16,7 +29,11 @@ export default function App() {
         onSelectMood={setSelectedMood}
       />
 
-      {selectedMood && <p>Mood selecionado: {selectedMood}</p>}
+      <p>{animeList.length} animes encontrados</p>
+
+      {selectedMood && (
+        <p>Mood selecionado: {selectedMood}</p>
+      )}
     </main>
   );
 }
