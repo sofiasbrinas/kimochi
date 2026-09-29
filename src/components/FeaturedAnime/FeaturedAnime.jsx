@@ -1,7 +1,7 @@
 import { Bookmark, Star } from 'lucide-react';
-import './FeaturedAnime.css'
+import './FeaturedAnime.css';
 
-export default function FeaturedAnime({ anime }) {
+export default function FeaturedAnime({ anime, onSelect }) {
   if (!anime) {
     return null;
   }
@@ -55,7 +55,10 @@ export default function FeaturedAnime({ anime }) {
         </div>
 
         <div className='featured-anime__actions'>
-          <button className='featured-anime__primary-button'>
+          <button
+            className='featured-anime__primary-button'
+            onClick={() => onSelect(anime)}
+          >
             Ver detalhes
           </button>
 

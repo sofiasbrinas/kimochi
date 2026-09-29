@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import AnimeGrid from './components/AnimeGrid/AnimeGrid';
 import FeaturedAnime from './components/FeaturedAnime/FeaturedAnime';
+import AnimeDetails from './components/AnimeDetails/AnimeDetails';
 import MoodGrid from './components/MoodGrid/MoodGrid';
 import { moods } from './data/moods';
 import { getAnimeByMood } from './services/anilist';
@@ -8,6 +9,7 @@ import { getAnimeByMood } from './services/anilist';
 export default function App() {
   const [selectedMood, setSelectedMood] = useState(null);
   const [animeList, setAnimeList] = useState([]);
+  const [selectedAnime, setSelectedAnime] = useState(null);
 
   const featuredAnime = animeList[0];
   const recommendations = animeList.slice(1);
@@ -48,10 +50,18 @@ export default function App() {
 
       {animeList.length > 0 && (
         <>
-          <FeaturedAnime anime={featuredAnime} />
+          <FeaturedAnime 
+            anime={featuredAnime}
+  onSelect={setSelectedAnime} />
           <AnimeGrid animeList={recommendations} />
         </>
       )}
+      {selectedAnime && (
+        <AnimeDetails
+          anime={selectedAnime}
+          onClose={() => setSelectedAnime(null)}
+        />
+        )}
     </main>
   );
 }
