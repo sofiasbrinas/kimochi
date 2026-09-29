@@ -13,6 +13,7 @@ const ANIME_QUERY = `
     $perPage: Int
     $genres: [String]
     $tags: [String]
+    $format: MediaFormat
   ) {
     Page(page: $page, perPage: $perPage) {
       media(
@@ -20,6 +21,7 @@ const ANIME_QUERY = `
         isAdult: false
         genre_in: $genres
         tag_in: $tags
+        format: $format
         sort: SCORE_DESC
       ) {
         id
@@ -56,7 +58,7 @@ const ANIME_QUERY = `
 
 // Busca animes utilizando os filtros definidos
 // no mood selecionado pelo usuário.
-export async function getAnimeByMood(mood) {
+export async function getAnimeByMood(mood, filters) {
   const variables = {
     page: 1,
     perPage: 12,
@@ -65,6 +67,7 @@ export async function getAnimeByMood(mood) {
     // enviamos undefined em vez de um array vazio.
     genres: mood.genres.length > 0 ? mood.genres : undefined,
     tags: mood.tags.length > 0 ? mood.tags : undefined,
+    format: filters.format || undefined,
   };
 
   const response = await axios.post(ANILIST_URL, {

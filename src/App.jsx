@@ -1,9 +1,10 @@
 import { useState } from 'react';
+import AnimeDetails from './components/AnimeDetails/AnimeDetails';
 import AnimeGrid from './components/AnimeGrid/AnimeGrid';
 import FeaturedAnime from './components/FeaturedAnime/FeaturedAnime';
-import AnimeDetails from './components/AnimeDetails/AnimeDetails';
 import FilterPanel from './components/FilterPanel/FilterPanel';
 import MoodGrid from './components/MoodGrid/MoodGrid';
+
 import { moods } from './data/moods';
 import { getAnimeByMood } from './services/anilist';
 
@@ -13,7 +14,8 @@ export default function App() {
   const [selectedAnime, setSelectedAnime] = useState(null);
 
   const [filters, setFilters] = useState({
-  format: null,});
+    format: null,
+  });
 
   const featuredAnime = animeList[0];
   const recommendations = animeList.slice(1);
@@ -25,10 +27,29 @@ export default function App() {
     // Atualiza o mood selecionado na interface.
     setSelectedMood(moodId);
 
-    // Consulta a AniList usando os filtros desse mood.
-    const results = await getAnimeByMood(mood);
+    // Consulta a AniList usando o mood e os filtros atuais.
+    const results = await getAnimeByMood(mood, filters);
 
     // Guarda as recomendações recebidas.
+    setAnimeList(results);
+  }
+
+  async function handleFilterChange(newFilters) {
+    // Atualiza o estado visual dos filtros.
+    setFilters(newFilters);
+
+    // Se nenhum mood foi escolhido, não precisamos consultar a API.
+    if (!selectedMood) {
+      return;
+    }
+
+    // Recupera o objeto completo do mood já selecionado.
+    const mood = moods.find((item) => item.id === selectedMood);
+
+    // Faz uma nova consulta usando o novo filtro.
+    const results = await getAnimeByMood(mood, newFilters);
+
+    // Atualiza os resultados exibidos.
     setAnimeList(results);
   }
 
@@ -45,28 +66,32 @@ export default function App() {
       />
 
       {selectedMood && (
-        <FilterPanel 
+        <FilterPanel
           filters={filters}
-          onChange={setFilters}
+          onChange={handleFilterChange}
         />
       )}
 
       {animeList.length > 0 && (
         <>
-          <FeaturedAnime 
+          <FeaturedAnime
             anime={featuredAnime}
-  onSelect={setSelectedAnime} />
-          <AnimeGrid 
+            onSelect={setSelectedAnime}
+          />
+
+          <AnimeGrid
             animeList={recommendations}
-            onSelectAnime={setSelectedAnime} />
+            onSelectAnime={setSelectedAnime}
+          />
         </>
       )}
+
       {selectedAnime && (
         <AnimeDetails
           anime={selectedAnime}
           onClose={() => setSelectedAnime(null)}
         />
-        )}
+      )}
     </main>
   );
 }
