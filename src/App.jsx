@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import AnimeGrid from './components/AnimeGrid/AnimeGrid';
+import FeaturedAnime from './components/FeaturedAnime/FeaturedAnime';
 import MoodGrid from './components/MoodGrid/MoodGrid';
 import { moods } from './data/moods';
 import { getAnimeByMood } from './services/anilist';
@@ -7,6 +8,9 @@ import { getAnimeByMood } from './services/anilist';
 export default function App() {
   const [selectedMood, setSelectedMood] = useState(null);
   const [animeList, setAnimeList] = useState([]);
+
+  const featuredAnime = animeList[0];
+  const recommendations = animeList.slice(1);
 
   async function handleMoodSelect(moodId) {
     // Procura os dados completos do mood selecionado.
@@ -41,9 +45,13 @@ export default function App() {
           <p>{animeList.length} animes encontrados</p>
         </>
       )}
+
       {animeList.length > 0 && (
-        <AnimeGrid animeList={animeList} />
-        )}
+        <>
+          <FeaturedAnime anime={featuredAnime} />
+          <AnimeGrid animeList={recommendations} />
+        </>
+      )}
     </main>
   );
 }
