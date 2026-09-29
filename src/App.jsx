@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import AnimeCard from './components/AnimeCard/AnimeCard';
 import MoodGrid from './components/MoodGrid/MoodGrid';
 import { moods } from './data/moods';
 import { getAnimeByMood } from './services/anilist';
@@ -40,6 +41,9 @@ export default function App() {
           <p>{animeList.length} animes encontrados</p>
         </>
       )}
+      {animeList.length > 0 && (
+        <AnimeCard anime={animeList[0]} />
+        )}
     </main>
   );
 }

@@ -1,0 +1,31 @@
+.anime-card {
+  width: 220px;
+}
+
+.anime-card__image {
+  width: 100%;
+
+  aspect-ratio: 2 / 3;
+
+  object-fit: cover;
+
+  border-radius: var(--radius-medium);
+}
+
+.anime-card__content {
+  margin-top: var(--space-2);
+}
+
+.anime-card__title {
+  color: var(--color-text-primary);
+
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.anime-card__year,
+.anime-card__score {
+  color: var(--color-text-secondary);
+
+  font-size: 0.85rem;
+}
