@@ -16,6 +16,7 @@ export default function App() {
   const [filters, setFilters] = useState({
     format: null,
     status: null,
+    genre: null,
   });
 
   const featuredAnime = animeList[0];

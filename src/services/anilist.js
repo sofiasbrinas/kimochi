@@ -47,13 +47,18 @@ const ANIME_QUERY = `
 `;
 
 export async function getAnimeByMood(mood, filters) {
+  const combinedGenres = [
+    ...mood.genres,
+    ...(filters.genre ? [filters.genre] : []),
+  ];
+
   const variables = {
     page: 1,
     perPage: 12,
 
     genres:
-      mood.genres.length > 0
-        ? mood.genres
+      combinedGenres.length > 0
+        ? combinedGenres
         : undefined,
 
     tags:
