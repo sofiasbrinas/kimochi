@@ -4,25 +4,41 @@ Kimochi é uma aplicação web de descoberta de animes baseada no sentimento que
 
 Em vez de começar a busca por título, a aplicação propõe uma pergunta:
 
-> O que você quer sentir?
+> **O que você quer sentir?**
 
 A partir da escolha de um mood, o Kimochi consulta a API pública da AniList e apresenta uma recomendação principal acompanhada de outras opções relacionadas.
 
+---
+
+## Problemática
+
+Catálogos de anime oferecem uma grande quantidade de títulos, gêneros e informações, mas essa variedade também pode tornar a escolha do que assistir cansativa.
+
+O Kimochi parte da seguinte questão:
+
+> Como utilizar dados de uma API pública para ajudar o usuário a encontrar animes de acordo com o tipo de experiência ou sentimento que deseja naquele momento?
+
+A aplicação transforma dados disponibilizados pela AniList em uma experiência de descoberta baseada em moods, permitindo que o usuário refine os resultados utilizando filtros e consulte informações dos títulos recomendados.
+
+---
+
 ## Objetivo
 
-O projeto foi desenvolvido como parte de um desafio de consumo de API pública utilizando React e Vite.
+O projeto foi desenvolvido como parte de um desafio de consumo de API pública utilizando React + Vite.
 
-Além dos requisitos técnicos, o projeto também explora conceitos de UX/UI aplicados a produtos de entretenimento e descoberta de conteúdo.
+Além dos requisitos técnicos, o projeto também explora conceitos de UX/UI aplicados a produtos de entretenimento e descoberta de conteúdo, com foco em reduzir a fadiga de decisão e tornar a busca por animes mais clara, visual e interativa.
+
+---
 
 ## Funcionalidades
 
 - Seleção de anime por mood
 - Integração com a AniList GraphQL API
-- Filtros por formato
-- Filtros por status
-- Filtros por gênero
-- Filtros por quantidade de episódios
-- Filtros por duração dos episódios
+- Filtro por formato
+- Filtro por status
+- Filtro por gênero
+- Filtro por quantidade de episódios
+- Filtro por duração dos episódios
 - Anime em destaque
 - Grid de recomendações
 - Modal com detalhes do anime
@@ -32,6 +48,8 @@ Além dos requisitos técnicos, o projeto também explora conceitos de UX/UI apl
 - Estado sem resultados
 - Interface responsiva
 - Navegação adaptada para desktop, tablet e mobile
+
+---
 
 ## Moods disponíveis
 
@@ -46,6 +64,8 @@ Além dos requisitos técnicos, o projeto também explora conceitos de UX/UI apl
 
 Cada mood é associado a gêneros e tags utilizados na consulta da AniList.
 
+---
+
 ## Tecnologias
 
 - React
@@ -59,7 +79,9 @@ Cada mood é associado a gêneros e tags utilizados na consulta da AniList.
 - GitHub
 - Vercel
 
-## API
+---
+
+## API utilizada
 
 O projeto utiliza a API GraphQL pública da AniList:
 
@@ -76,6 +98,8 @@ As consultas utilizam informações como:
 - avaliação média
 
 Os resultados são atualmente ordenados pela avaliação da AniList.
+
+---
 
 ## Estrutura do projeto
 
@@ -99,9 +123,12 @@ src/
 │   ├── global.css
 │   ├── reset.css
 │   └── variables.css
+├── App.css
 ├── App.jsx
 └── main.jsx
 ```
+
+---
 
 ## Como executar o projeto
 
@@ -135,6 +162,8 @@ A aplicação será iniciada no endereço informado pelo Vite, normalmente:
 http://localhost:5173
 ```
 
+---
+
 ## Build de produção
 
 Para gerar a versão de produção:
@@ -149,19 +178,23 @@ Para testar o build localmente:
 npm run preview
 ```
 
+---
+
 ## Design e UX
 
 A interface foi construída com foco em:
 
 - redução da fadiga de decisão
 - hierarquia visual
-- feedback de carregamento e erro
+- feedback de carregamento, erro e ausência de resultados
 - navegação responsiva
 - apresentação editorial das recomendações
 - consistência entre componentes
 - clareza na exploração dos resultados
 
 A direção visual utiliza uma interface escura, minimalista e inspirada em produtos de streaming e descoberta de conteúdo.
+
+---
 
 ## Tratamento de estados
 
@@ -181,6 +214,8 @@ Exibido quando ocorre algum problema durante a consulta à API.
 
 Esses estados ajudam a comunicar ao usuário o que está acontecendo durante a interação com a aplicação.
 
+---
+
 ## Sistema de recomendação atual
 
 O Kimochi traduz cada mood em uma combinação de gêneros e tags utilizadas na consulta à AniList.
@@ -197,6 +232,8 @@ A AniList retorna uma lista de animes compatíveis com os critérios informados.
 
 Atualmente, os resultados são ordenados pela avaliação média da AniList, e o primeiro item retornado é utilizado como o destaque principal da recomendação.
 
+---
+
 ## Responsividade
 
 A interface possui adaptações para diferentes tamanhos de tela.
@@ -206,7 +243,7 @@ A interface possui adaptações para diferentes tamanhos de tela.
 - navegação lateral
 - grid de moods em múltiplas colunas
 - painel de filtros estruturado
-- quatro colunas de recomendações
+- múltiplas colunas de recomendações
 
 ### Tablet
 
@@ -220,12 +257,14 @@ A interface possui adaptações para diferentes tamanhos de tela.
 - navegação compacta
 - moods reorganizados
 - filtros empilhados
-- grid de recomendações em duas colunas
+- grid de recomendações adaptado
 - tipografia e espaçamentos reduzidos
 
-## Uso de Inteligência Artificial
+---
 
-Ferramentas de Inteligência Artificial foram utilizadas como apoio durante o desenvolvimento do projeto para:
+## 🤖 Uso de Inteligência Artificial
+
+A Inteligência Artificial foi utilizada como ferramenta de apoio durante o desenvolvimento do projeto para:
 
 - planejamento da arquitetura
 - estudo de React
@@ -236,7 +275,17 @@ Ferramentas de Inteligência Artificial foram utilizadas como apoio durante o de
 - revisão de responsividade
 - documentação
 
-As decisões de implementação, testes, ajustes e integração foram realizadas durante o desenvolvimento do projeto.
+### Prompt utilizado
+
+> "Estou desenvolvendo uma aplicação React + Vite chamada Kimochi que utiliza a API GraphQL da AniList para recomendar animes de acordo com o mood selecionado pelo usuário. Quero organizar a aplicação utilizando componentes reutilizáveis e permitir que filtros como formato, gênero, quantidade de episódios e duração alterem a consulta. Explique de forma didática como organizar essa responsabilidade entre os componentes e o serviço responsável pela API."
+
+### Objetivo do prompt
+
+Utilizei esse prompt para compreender como separar as responsabilidades da aplicação, mantendo a interface componentizada e concentrando a lógica de comunicação com a AniList em um serviço específico.
+
+A IA também foi utilizada para auxiliar na identificação de erros, compreender mensagens retornadas pela API e revisar decisões relacionadas à responsividade e experiência do usuário.
+
+---
 
 ## Aprendizados
 
@@ -254,6 +303,9 @@ Durante o desenvolvimento do Kimochi foram praticados conceitos como:
 - responsividade
 - Git e versionamento por branches
 - integração com API externa
+- organização de fluxo de interface com foco em UX
+
+---
 
 ## Próximas melhorias
 
@@ -270,13 +322,15 @@ Algumas evoluções planejadas para o projeto:
 - refinamentos de acessibilidade
 - melhorias adicionais para mobile
 
-## Deploy
+---
 
-O projeto será publicado utilizando a Vercel.
+## 🌐 Deploy
 
-Após o deploy, o link da aplicação poderá ser adicionado aqui:
+A aplicação está publicada na Vercel:
 
-`Em breve`
+**https://kimochi-chi.vercel.app/**
+
+---
 
 ## Repositório
 
@@ -284,8 +338,10 @@ GitHub:
 
 `https://github.com/sofiasbrinas/kimochi/tree/main`
 
+---
+
 ## Status
 
-Versão inicial funcional.
+Versão inicial funcional e publicada.
 
 O projeto continua em desenvolvimento.
