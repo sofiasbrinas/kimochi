@@ -8,10 +8,23 @@ export default function FilterPanel({ filters, onChange }) {
     { label: 'OVA', value: 'OVA' },
   ];
 
+  const statuses = [
+    { label: 'Todos', value: null },
+    { label: 'Em exibição', value: 'RELEASING' },
+    { label: 'Finalizado', value: 'FINISHED' },
+  ];
+
   function handleFormatChange(format) {
     onChange({
       ...filters,
       format,
+    });
+  }
+
+  function handleStatusChange(status) {
+    onChange({
+      ...filters,
+      status,
     });
   }
 
@@ -34,6 +47,28 @@ export default function FilterPanel({ filters, onChange }) {
               onClick={() => handleFormatChange(format.value)}
             >
               {format.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className='filter-panel__group'>
+        <p className='filter-panel__label'>
+          Status
+        </p>
+
+        <div className='filter-panel__options'>
+          {statuses.map((status) => (
+            <button
+              key={status.label}
+              className={`filter-panel__button ${
+                filters.status === status.value
+                  ? 'filter-panel__button--active'
+                  : ''
+              }`}
+              onClick={() => handleStatusChange(status.value)}
+            >
+              {status.label}
             </button>
           ))}
         </div>
