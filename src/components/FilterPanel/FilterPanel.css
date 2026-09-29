@@ -103,3 +103,66 @@
 .filter-panel__clear:hover {
   color: var(--color-text-primary);
 }
+
+@media (max-width: 820px) {
+  .filter-panel {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'format'
+      'status'
+      'genre'
+      'episodes'
+      'duration';
+    gap: 20px;
+    padding: 22px;
+  }
+
+  .filter-panel__actions {
+    top: 18px;
+    right: 20px;
+  }
+}
+
+@media (max-width: 520px) {
+  .filter-panel {
+    gap: 18px;
+
+    padding: 18px;
+
+    border-radius: var(--radius-medium);
+  }
+
+  .filter-panel__group {
+    gap: 8px;
+  }
+
+  .filter-panel__options {
+    gap: 8px;
+  }
+
+  .filter-panel__button {
+    min-height: 34px;
+
+    padding: 6px 11px;
+
+    font-size: 0.76rem;
+  }
+
+  .filter-panel__label {
+    font-size: 0.74rem;
+  }
+
+  .filter-panel__actions {
+    position: static;
+
+    justify-content: flex-start;
+
+    margin-top: -4px;
+  }
+
+  .filter-panel__clear {
+    padding: 0;
+
+    font-size: 0.74rem;
+  }
+}

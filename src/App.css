@@ -1,3 +1,7 @@
+/* =========================================================
+   ESTRUTURA PRINCIPAL
+   ========================================================= */
+
 .app {
   display: flex;
   min-height: 100vh;
@@ -10,6 +14,11 @@
   padding: 56px 48px 96px;
   margin: 0 auto;
 }
+
+
+/* =========================================================
+   HERO INICIAL
+   ========================================================= */
 
 .app__hero {
   max-width: 680px;
@@ -44,8 +53,29 @@
   line-height: 1.7;
 }
 
+
+/* =========================================================
+   SEÇÕES
+   ========================================================= */
+
 .app__section {
   margin-top: 56px;
+}
+
+.app__section--mood {
+  margin-top: 40px;
+}
+
+.app__section--mood-editing {
+  margin-top: 24px;
+}
+
+.app__section--featured {
+  margin-top: 32px;
+}
+
+.app__section--state {
+  margin-top: 24px;
 }
 
 .app__section-header {
@@ -62,4 +92,308 @@
   font-size: 1.6rem;
   font-weight: 500;
   letter-spacing: -0.025em;
+}
+
+
+/* =========================================================
+   AÇÃO TEXTUAL
+   ========================================================= */
+
+.app__text-action {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 0.76rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 160ms ease;
+}
+
+.app__text-action:hover {
+  color: var(--color-text-primary);
+}
+
+
+/* =========================================================
+   CONTROLES COMPACTOS
+   MOOD + FILTROS
+   ========================================================= */
+
+.app__controls {
+  margin-top: 24px;
+  padding: 16px 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: var(--color-surface);
+}
+
+.app__controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.app__controls-info {
+  min-width: 0;
+}
+
+.app__controls-label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--color-text-secondary);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.app__controls-value-group {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+}
+
+.app__controls-value {
+  color: var(--color-text-primary);
+
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.app__controls-description {
+  color: var(--color-text-secondary);
+  font-size: 0.76rem;
+}
+
+.app__controls-filters {
+  margin: 0;
+  overflow: hidden;
+  color: var(--color-text-secondary);
+  font-size: 0.76rem;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+}
+
+.app__controls-divider {
+  height: 1px;
+  margin: 12px 0;
+  background: var(--color-border);
+}
+
+.app__controls-action {
+  flex-shrink: 0;
+  min-height: 34px;
+  padding: 6px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 0.74rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease;
+}
+
+.app__controls-action:hover {
+  border-color: rgba(184, 167, 255, 0.35);
+  background: rgba(184, 167, 255, 0.08);
+  color: var(--color-text-primary);
+}
+
+
+/* =========================================================
+   PAINEL DE FILTROS EXPANDIDO
+   ========================================================= */
+
+.app__controls-panel {
+  margin-top: 18px;
+  padding-top: 18px;
+
+  border-top: 1px solid var(--color-border);
+}
+
+/*
+  O FilterPanel já está dentro de uma superfície
+  visual criada por .app__controls.
+
+  Por isso retiramos a segunda "caixa" externa
+  quando ele aparece aqui.
+*/
+.app__controls-panel .filter-panel {
+  margin: 0;
+}
+
+
+/* =========================================================
+   TABLET / DESKTOP MENOR
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .app__content {
+    padding: 48px 32px 80px;
+  }
+
+  .app__title {
+    font-size: clamp(2.3rem, 6vw, 3.8rem);
+  }
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 820px) {
+  .app {
+    display: block;
+  }
+
+  .app__content {
+    max-width: none;
+
+    padding: 32px 20px 64px;
+  }
+
+  .app__hero {
+    max-width: 100%;
+
+    margin-bottom: 28px;
+  }
+
+  .app__title {
+    font-size: clamp(2.1rem, 9vw, 3.2rem);
+  }
+
+  .app__description {
+    max-width: 100%;
+  }
+
+  .app__section {
+    margin-top: 44px;
+  }
+
+  .app__section--mood {
+    margin-top: 28px;
+  }
+
+  .app__section--mood-editing {
+    margin-top: 20px;
+  }
+
+  .app__section--featured {
+    margin-top: 28px;
+  }
+
+  .app__section--state {
+    margin-top: 20px;
+  }
+
+  .app__section-header {
+    align-items: flex-start;
+  }
+
+  .app__controls {
+    margin-top: 20px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 520px) {
+  .app__content {
+    padding: 24px 16px 48px;
+  }
+
+  .app__hero {
+    margin-bottom: 24px;
+  }
+
+  .app__title {
+    font-size: clamp(2rem, 10vw, 2.8rem);
+  }
+
+  .app__description {
+    margin-top: 16px;
+
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .app__section {
+    margin-top: 36px;
+  }
+
+  .app__section--mood {
+    margin-top: 24px;
+  }
+
+  .app__section--mood-editing {
+    margin-top: 18px;
+  }
+
+  .app__section--featured {
+    margin-top: 24px;
+  }
+
+  .app__section--state {
+    margin-top: 18px;
+  }
+
+  .app__section-title {
+    font-size: 1.35rem;
+  }
+
+
+  /* -----------------------------------------
+     CONTROLES MOBILE
+     ----------------------------------------- */
+
+  .app__controls {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: var(--radius-medium);
+  }
+
+  .app__controls-row {
+    gap: 12px;
+  }
+
+  .app__controls-value-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+  }
+
+  .app__controls-description {
+    font-size: 0.72rem;
+  }
+
+  .app__controls-filters {
+    max-width: 230px;
+    font-size: 0.72rem;
+  }
+
+  .app__controls-action {
+    min-height: 32px;
+    padding: 5px 10px;
+    font-size: 0.7rem;
+  }
+
+  .app__controls-divider {
+    margin: 10px 0;
+  }
+
+  .app__controls-panel {
+    margin-top: 14px;
+    padding-top: 14px;
+  }
 }

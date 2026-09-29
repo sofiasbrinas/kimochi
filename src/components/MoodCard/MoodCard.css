@@ -93,3 +93,23 @@
   font-size: 0.75rem;
   line-height: 1.4;
 }
+
+@media (max-width: 520px) {
+  .mood-card {
+    min-height: 82px;
+    padding: 14px 16px;
+  }
+
+  .mood-card__icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .mood-card__title {
+    font-size: 0.88rem;
+  }
+
+  .mood-card__description {
+    font-size: 0.74rem;
+  }
+}

@@ -14,56 +14,50 @@ export default function App() {
   /*
     MOOD SELECIONADO
 
-    Guarda o id do sentimento escolhido pelo usuário.
-    Exemplo: 'comforting', 'romantic', 'intense'.
+    Guarda o id do sentimento escolhido.
+    Exemplo:
+    'comforting', 'romantic', 'nostalgic'.
   */
   const [selectedMood, setSelectedMood] = useState(null);
 
   /*
-    LISTA DE ANIMES
+    CONTROLE DO SELETOR DE MOODS
 
-    Armazena os resultados recebidos da AniList.
-    Essa lista é usada para montar:
-    - o anime em destaque;
-    - os cards de recomendações.
+    true:
+    mostra os cards de sentimentos.
+
+    false:
+    mantém a escolha compactada.
+  */
+  const [isMoodPickerOpen, setIsMoodPickerOpen] = useState(true);
+
+  /*
+    CONTROLE DO PAINEL DE FILTROS
+
+    Os filtros começam fechados para não
+    empurrar a recomendação principal
+    para baixo da página.
+  */
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+
+  /*
+    RESULTADOS DA ANILIST
   */
   const [animeList, setAnimeList] = useState([]);
 
   /*
-    ANIME SELECIONADO
-
-    Guarda o anime que o usuário clicou
-    para abrir o modal de detalhes.
+    ANIME SELECIONADO PARA O MODAL
   */
   const [selectedAnime, setSelectedAnime] = useState(null);
 
   /*
-    ESTADO DE CARREGAMENTO
-
-    true:
-    a aplicação está esperando a resposta da API.
-
-    false:
-    a requisição terminou.
+    ESTADOS DA REQUISIÇÃO
   */
   const [isLoading, setIsLoading] = useState(false);
-
-  /*
-    ESTADO DE ERRO
-
-    null:
-    não existe erro.
-
-    string:
-    contém uma mensagem para mostrar ao usuário.
-  */
   const [error, setError] = useState(null);
 
   /*
     FILTROS
-
-    Cada propriedade representa uma escolha
-    feita dentro do FilterPanel.
 
     null significa que aquele filtro
     não está sendo aplicado.
@@ -77,71 +71,120 @@ export default function App() {
   });
 
   /*
-    O primeiro anime retornado pela API
-    será usado como destaque principal.
+    Recupera o objeto completo correspondente
+    ao mood atualmente selecionado.
+  */
+  const currentMood = moods.find(
+    (item) => item.id === selectedMood,
+  );
+
+  /*
+    O primeiro anime vira o destaque.
   */
   const featuredAnime = animeList[0];
 
   /*
-    Os demais resultados serão exibidos
-    no grid de recomendações.
+    Os demais vão para o grid.
   */
   const recommendations = animeList.slice(1);
 
   /*
-    SELEÇÃO DE MOOD
+    RÓTULOS DOS FILTROS
 
-    Essa função é executada quando o usuário
-    clica em um dos cards de sentimento.
+    Servem apenas para transformar os valores
+    internos da API em textos amigáveis.
+  */
+  const formatLabels = {
+    TV: 'TV',
+    MOVIE: 'Filme',
+    OVA: 'OVA',
+  };
+
+  const statusLabels = {
+    RELEASING: 'Em exibição',
+    FINISHED: 'Finalizado',
+  };
+
+  const episodeLabels = {
+    SHORT: 'Até 12 episódios',
+    MEDIUM: '13–26 episódios',
+    LONG: '27+ episódios',
+  };
+
+  const durationLabels = {
+    SHORT: 'Até 14 min',
+    STANDARD: '15–30 min',
+    LONG: '31+ min',
+  };
+
+  /*
+    RESUMO DOS FILTROS ATIVOS
+
+    O filter(Boolean) remove os valores null
+    para exibirmos apenas filtros realmente ativos.
+  */
+  const activeFilters = [
+    filters.format
+      ? formatLabels[filters.format]
+      : null,
+
+    filters.status
+      ? statusLabels[filters.status]
+      : null,
+
+    filters.genre,
+
+    filters.episodeRange
+      ? episodeLabels[filters.episodeRange]
+      : null,
+
+    filters.durationRange
+      ? durationLabels[filters.durationRange]
+      : null,
+  ].filter(Boolean);
+
+  /*
+    SELEÇÃO DE MOOD
   */
   async function handleMoodSelect(moodId) {
-    /*
-      Procura, dentro do array moods,
-      o objeto correspondente ao id clicado.
-    */
     const mood = moods.find(
       (item) => item.id === moodId,
     );
 
     /*
-      Atualiza visualmente qual mood
-      está selecionado.
+      Salva a escolha.
     */
     setSelectedMood(moodId);
 
     /*
-      Antes de iniciar a requisição:
-
-      - ativa o estado de loading;
-      - remove qualquer erro anterior.
+      Depois da escolha, recolhemos os moods
+      para deixar o resultado ganhar destaque.
     */
+    setIsMoodPickerOpen(false);
+
+    /*
+      Também recolhemos os filtros.
+    */
+    setIsFilterPanelOpen(false);
+
     setIsLoading(true);
     setError(null);
 
     try {
       /*
-        Faz a requisição para a AniList.
-
-        Enviamos:
-        - o mood selecionado;
-        - os filtros atuais.
+        Faz a consulta utilizando
+        mood + filtros atuais.
       */
       const results = await getAnimeByMood(
         mood,
         filters,
       );
 
-      /*
-        Se a requisição funcionar,
-        salvamos os resultados recebidos.
-      */
       setAnimeList(results);
     } catch {
       /*
-        Se ocorrer algum erro:
-
-        - limpamos resultados antigos;
-        - salvamos uma mensagem de erro.
+        Em caso de erro, removemos resultados
+        antigos e exibimos o estado de erro.
       */
       setAnimeList([]);
 
@@ -150,10 +193,8 @@ export default function App() {
       );
     } finally {
       /*
-        O finally sempre é executado,
-        independentemente de sucesso ou erro.
-
-        Portanto, o loading termina aqui.
+        O loading termina tanto em sucesso
+        quanto em erro.
       */
       setIsLoading(false);
     }
@@ -161,147 +202,222 @@ export default function App() {
 
   /*
     ALTERAÇÃO DOS FILTROS
-
-    Essa função é executada sempre que
-    algum filtro é alterado.
   */
   async function handleFilterChange(newFilters) {
-    /*
-      Atualiza o estado com os novos filtros.
-    */
     setFilters(newFilters);
 
     /*
-      Sem um mood selecionado, ainda não existe
-      contexto suficiente para buscar recomendações.
+      Não existe busca sem mood escolhido.
     */
     if (!selectedMood) {
       return;
     }
 
-    /*
-      Recupera o objeto completo do mood atual.
-    */
     const mood = moods.find(
       (item) => item.id === selectedMood,
     );
 
-    /*
-      Começamos uma nova requisição.
-    */
     setIsLoading(true);
     setError(null);
 
     try {
       /*
-        Busca novamente os animes,
-        agora usando os filtros atualizados.
+        Refaz a busca com os novos filtros.
       */
       const results = await getAnimeByMood(
         mood,
         newFilters,
       );
 
-      /*
-        Atualiza os resultados exibidos.
-      */
       setAnimeList(results);
     } catch {
-      /*
-        Se a requisição falhar,
-        limpamos a lista e mostramos erro.
-      */
       setAnimeList([]);
 
       setError(
         'Não foi possível atualizar as recomendações.',
       );
     } finally {
-      /*
-        Finaliza o estado de carregamento.
-      */
       setIsLoading(false);
     }
   }
 
   return (
     <div className='app'>
-      {/* Navegação lateral principal */}
       <Sidebar />
 
       <main className='app__content'>
-        {/* Introdução da aplicação */}
-        <header className='app__hero'>
-          <span className='app__eyebrow'>
-            Descubra pelo que você quer sentir
-          </span>
+        {/*
+          HERO INICIAL
 
-          <h1 className='app__title'>
-            O que você quer sentir?
-          </h1>
+          Só aparece antes da primeira escolha.
 
-          <p className='app__description'>
-            Escolha um sentimento e encontre animes
-            que combinam com o seu momento.
-          </p>
-        </header>
+          Depois que o usuário já escolheu
+          o que deseja sentir, o resultado
+          passa a ser o protagonista.
+        */}
+        {!selectedMood && (
+          <header className='app__hero'>
+            <span className='app__eyebrow'>
+              Descubra pelo que você quer sentir
+            </span>
 
-        {/* Seleção de sentimento */}
-        <section className='app__section'>
-          <MoodGrid
-            moods={moods}
-            selectedMood={selectedMood}
-            onSelectMood={handleMoodSelect}
-          />
-        </section>
+            <h1 className='app__title'>
+              O que você quer sentir?
+            </h1>
+
+            <p className='app__description'>
+              Escolha um sentimento e encontre animes
+              que combinam com o seu momento.
+            </p>
+          </header>
+        )}
 
         {/*
-          FILTROS
+          SELETOR DE MOODS
 
-          Só aparecem depois que o usuário
-          escolhe um mood.
+          Aparece:
+          - inicialmente;
+          - quando o usuário clicar em "Alterar".
         */}
-        {selectedMood && (
-          <section className='app__section'>
-            <div className='app__section-header'>
-              <div>
-                <span className='app__section-eyebrow'>
-                  Personalize
-                </span>
+        {isMoodPickerOpen && (
+          <section
+            className={`app__section app__section--mood ${
+              selectedMood
+                ? 'app__section--mood-editing'
+                : ''
+            }`}
+          >
+            {selectedMood && (
+              <div className='app__section-header'>
+                <div>
+                  <span className='app__section-eyebrow'>
+                    Sentimento
+                  </span>
 
-                <h2 className='app__section-title'>
-                  Ajuste sua descoberta
-                </h2>
+                  <h2 className='app__section-title'>
+                    Escolha outro mood
+                  </h2>
+                </div>
+
+                <button
+                  type='button'
+                  className='app__text-action'
+                  onClick={() => setIsMoodPickerOpen(false)}
+                >
+                  Cancelar
+                </button>
               </div>
-            </div>
+            )}
 
-            <FilterPanel
-              filters={filters}
-              onChange={handleFilterChange}
+            <MoodGrid
+              moods={moods}
+              selectedMood={selectedMood}
+              onSelectMood={handleMoodSelect}
             />
           </section>
         )}
 
         {/*
-          LOADING STATE
+          CONTROLES COMPACTOS
 
-          Aparece enquanto esperamos
-          a resposta da API.
+          Depois que existe um mood selecionado,
+          mood e filtros passam a ocupar apenas
+          uma pequena área de controle.
+        */}
+        {selectedMood && (
+          <section className='app__controls'>
+            <div className='app__controls-row'>
+              <div className='app__controls-info'>
+                <span className='app__controls-label'>
+                  Mood
+                </span>
+
+                <div className='app__controls-value-group'>
+                  <strong className='app__controls-value'>
+                    {currentMood?.name}
+                  </strong>
+
+                  <span className='app__controls-description'>
+                    {currentMood?.description}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                type='button'
+                className='app__controls-action'
+                onClick={() => {
+                  setIsMoodPickerOpen(
+                    !isMoodPickerOpen,
+                  );
+                }}
+              >
+                {isMoodPickerOpen
+                  ? 'Fechar'
+                  : 'Alterar'}
+              </button>
+            </div>
+
+            <div className='app__controls-divider' />
+
+            <div className='app__controls-row'>
+              <div className='app__controls-info'>
+                <span className='app__controls-label'>
+                  Filtros
+                </span>
+
+                <p className='app__controls-filters'>
+                  {activeFilters.length > 0
+                    ? activeFilters.join(' · ')
+                    : 'Sem filtros adicionais'}
+                </p>
+              </div>
+
+              <button
+                type='button'
+                className='app__controls-action'
+                onClick={() =>
+                  setIsFilterPanelOpen(
+                    !isFilterPanelOpen,
+                  )
+                }
+              >
+                {isFilterPanelOpen
+                  ? 'Fechar'
+                  : 'Ajustar'}
+              </button>
+            </div>
+
+            {/*
+              PAINEL COMPLETO
+
+              Só aparece sob demanda.
+            */}
+            {isFilterPanelOpen && (
+              <div className='app__controls-panel'>
+                <FilterPanel
+                  filters={filters}
+                  onChange={handleFilterChange}
+                />
+              </div>
+            )}
+          </section>
+        )}
+
+        {/*
+          LOADING
         */}
         {isLoading && (
-          <section className='app__section'>
+          <section className='app__section app__section--state'>
             <ResultsState type='loading' />
           </section>
         )}
 
         {/*
-          ERROR STATE
-
-          Só aparece se existir um erro
-          e a aplicação não estiver carregando.
+          ERRO
         */}
         {error && !isLoading && (
-          <section className='app__section'>
+          <section className='app__section app__section--state'>
             <ResultsState
               type='error'
               message={error}
@@ -310,40 +426,28 @@ export default function App() {
         )}
 
         {/*
-          EMPTY STATE
-
-          Temos:
-          - um mood selecionado;
-          - nenhuma requisição em andamento;
-          - nenhum erro;
-          - zero resultados.
-
-          Nesse caso, informamos que nenhum
-          anime corresponde à combinação escolhida.
+          NENHUM RESULTADO
         */}
         {selectedMood &&
           !isLoading &&
           !error &&
           animeList.length === 0 && (
-            <section className='app__section'>
+            <section className='app__section app__section--state'>
               <ResultsState type='empty' />
             </section>
           )}
 
         {/*
-          RESULTADOS
-
-          Só mostramos featured + grid quando:
-          - terminou de carregar;
-          - não existe erro;
-          - existem resultados.
+          RESULTADOS ENCONTRADOS
         */}
         {!isLoading &&
           !error &&
           animeList.length > 0 && (
             <>
-              {/* Anime principal da recomendação */}
-              <section className='app__section'>
+              {/*
+                RECOMENDAÇÃO PRINCIPAL
+              */}
+              <section className='app__section app__section--featured'>
                 <div className='app__section-header'>
                   <div>
                     <span className='app__section-eyebrow'>
@@ -362,7 +466,9 @@ export default function App() {
                 />
               </section>
 
-              {/* Demais recomendações */}
+              {/*
+                RECOMENDAÇÕES SECUNDÁRIAS
+              */}
               <section className='app__section'>
                 <div className='app__section-header'>
                   <div>
@@ -386,9 +492,6 @@ export default function App() {
 
         {/*
           MODAL DE DETALHES
-
-          Só existe quando selectedAnime
-          contém um anime selecionado.
         */}
         {selectedAnime && (
           <AnimeDetails
