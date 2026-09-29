@@ -1,9 +1,13 @@
 import MoodCard from '../MoodCard/MoodCard';
 import './MoodGrid.css';
 
-export default function MoodGrid({ moods, selectedMood, onSelectMood }) {
+export default function MoodGrid({
+  moods,
+  selectedMood,
+  onSelectMood,
+}) {
   return (
-    <section className='mood-grid'>
+    <div className='mood-grid'>
       {moods.map((mood) => (
         <MoodCard
           key={mood.id}
@@ -12,6 +16,6 @@ export default function MoodGrid({ moods, selectedMood, onSelectMood }) {
           onSelect={onSelectMood}
         />
       ))}
-    </section>
+    </div>
   );
 }

@@ -1,16 +1,22 @@
 import { useState } from 'react';
+
 import AnimeDetails from './components/AnimeDetails/AnimeDetails';
 import AnimeGrid from './components/AnimeGrid/AnimeGrid';
 import FeaturedAnime from './components/FeaturedAnime/FeaturedAnime';
 import FilterPanel from './components/FilterPanel/FilterPanel';
 import MoodGrid from './components/MoodGrid/MoodGrid';
+import Sidebar from './components/Sidebar/Sidebar';
 
 import { moods } from './data/moods';
 import { getAnimeByMood } from './services/anilist';
 
+import './App.css';
+
 export default function App() {
   const [selectedMood, setSelectedMood] = useState(null);
+
   const [animeList, setAnimeList] = useState([]);
+
   const [selectedAnime, setSelectedAnime] = useState(null);
 
   const [filters, setFilters] = useState({
@@ -22,80 +28,134 @@ export default function App() {
   });
 
   const featuredAnime = animeList[0];
+
   const recommendations = animeList.slice(1);
 
   async function handleMoodSelect(moodId) {
-    // Procura os dados completos do mood selecionado.
     const mood = moods.find((item) => item.id === moodId);
 
-    // Atualiza o mood selecionado na interface.
     setSelectedMood(moodId);
 
-    // Consulta a AniList usando o mood e os filtros atuais.
     const results = await getAnimeByMood(mood, filters);
 
-    // Guarda as recomendações recebidas.
     setAnimeList(results);
   }
 
   async function handleFilterChange(newFilters) {
-    // Atualiza o estado visual dos filtros.
     setFilters(newFilters);
 
-    // Se nenhum mood foi escolhido, não precisamos consultar a API.
     if (!selectedMood) {
       return;
     }
 
-    // Recupera o objeto completo do mood já selecionado.
     const mood = moods.find((item) => item.id === selectedMood);
 
-    // Faz uma nova consulta usando o novo filtro.
-    const results = await getAnimeByMood(mood, newFilters);
+    const results = await getAnimeByMood(
+      mood,
+      newFilters,
+    );
 
-    // Atualiza os resultados exibidos.
     setAnimeList(results);
   }
 
   return (
-    <main>
-      <h1>Kimochi</h1>
+    <div className='app'>
+      <Sidebar />
 
-      <p>O que você quer sentir?</p>
+      <main className='app__content'>
+        <header className='app__hero'>
+          <span className='app__eyebrow'>
+            Descubra pelo que você quer sentir
+          </span>
 
-      <MoodGrid
-        moods={moods}
-        selectedMood={selectedMood}
-        onSelectMood={handleMoodSelect}
-      />
+          <h1 className='app__title'>
+            O que você quer sentir?
+          </h1>
 
-      {selectedMood && (
-        <FilterPanel
-          filters={filters}
-          onChange={handleFilterChange}
-        />
-      )}
+          <p className='app__description'>
+            Escolha um sentimento e encontre animes
+            que combinam com o seu momento.
+          </p>
+        </header>
 
-      {animeList.length > 0 && (
-        <>
-          <FeaturedAnime
-            anime={featuredAnime}
-            onSelect={setSelectedAnime}
+        <section className='app__section'>
+          <MoodGrid
+            moods={moods}
+            selectedMood={selectedMood}
+            onSelectMood={handleMoodSelect}
           />
+        </section>
 
-          <AnimeGrid
-            animeList={recommendations}
-            onSelectAnime={setSelectedAnime}
+        {selectedMood && (
+          <section className='app__section'>
+            <div className='app__section-header'>
+              <div>
+                <span className='app__section-eyebrow'>
+                  Personalize
+                </span>
+
+                <h2 className='app__section-title'>
+                  Ajuste sua descoberta
+                </h2>
+              </div>
+            </div>
+
+            <FilterPanel
+              filters={filters}
+              onChange={handleFilterChange}
+            />
+          </section>
+        )}
+
+        {animeList.length > 0 && (
+          <>
+            <section className='app__section'>
+              <div className='app__section-header'>
+                <div>
+                  <span className='app__section-eyebrow'>
+                    Para você
+                  </span>
+
+                  <h2 className='app__section-title'>
+                    Melhor match
+                  </h2>
+                </div>
+              </div>
+
+              <FeaturedAnime
+                anime={featuredAnime}
+                onSelect={setSelectedAnime}
+              />
+            </section>
+
+            <section className='app__section'>
+              <div className='app__section-header'>
+                <div>
+                  <span className='app__section-eyebrow'>
+                    Continue explorando
+                  </span>
+
+                  <h2 className='app__section-title'>
+                    Recomendações
+                  </h2>
+                </div>
+              </div>
+
+              <AnimeGrid
+                animeList={recommendations}
+                onSelectAnime={setSelectedAnime}
+              />
+            </section>
+          </>
+        )}
+
+        {selectedAnime && (
+          <AnimeDetails
+            anime={selectedAnime}
+            onClose={() => setSelectedAnime(null)}
           />
-        </>
-      )}
-
-      {selectedAnime && (
-        <AnimeDetails
-          anime={selectedAnime}
-          onClose={() => setSelectedAnime(null)}
-        />
-      )}
-    </main>
+        )}
+      </main>
+    </div>
   );
 }

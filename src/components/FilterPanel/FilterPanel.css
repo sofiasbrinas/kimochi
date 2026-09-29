@@ -1,17 +1,17 @@
 .filter-panel {
+  position: relative;
   display: grid;
-
   grid-template-columns: repeat(2, minmax(0, 1fr));
-
   grid-template-areas:
     'format status'
     'genre genre'
-    'episodes duration'
-    'actions actions';
-
-  gap: var(--space-4);
-
-  margin: var(--space-5) 0;
+    'episodes duration';
+  gap: 28px 40px;
+  padding: 28px;
+  margin-top: 24px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
 }
 
 .filter-panel__group {
@@ -20,7 +20,7 @@
 
   min-width: 0;
 
-  gap: var(--space-2);
+  gap: 12px;
 }
 
 .filter-panel__group--format {
@@ -41,7 +41,6 @@
 
 .filter-panel__label {
   color: var(--color-text-secondary);
-
   font-size: 0.85rem;
   font-weight: 500;
 }
@@ -49,24 +48,19 @@
 .filter-panel__options {
   display: flex;
   flex-wrap: wrap;
-
   gap: var(--space-2);
 }
 
 .filter-panel__button {
-  min-height: 40px;
-
-  padding: 8px 14px;
-
+  min-height: 36px;
+  padding: 7px 13px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-pill);
-
   background: transparent;
-
   color: var(--color-text-secondary);
-
+  font-size: 0.82rem;
   white-space: nowrap;
-
+  cursor: pointer;
   transition:
     background 160ms ease,
     color 160ms ease,
@@ -74,17 +68,14 @@
 }
 
 .filter-panel__button:hover {
-  border-color: rgba(255, 255, 255, 0.18);
-
+  border-color: rgba(255, 255, 255, 0.16);
   color: var(--color-text-primary);
 }
 
 .filter-panel__button--active {
-  border-color: var(--color-text-primary);
-
-  background: var(--color-text-primary);
-
-  color: var(--color-background);
+  border-color: rgba(184, 167, 255, 0.45);
+  background: rgba(184, 167, 255, 0.14);
+  color: var(--color-text-primary);
 }
 
 .filter-panel__group--duration {
@@ -92,27 +83,23 @@
 }
 
 .filter-panel__actions {
-  grid-area: actions;
-
-  display: flex;
-  justify-content: flex-end;
+  position: absolute;
+  top: 24px;
+  right: 28px;
 }
-
 .filter-panel__clear {
-  min-height: 40px;
-
-  padding: 8px 16px;
-
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-pill);
-
+  padding: 6px 10px;
+  border: 0;
   background: transparent;
-
   color: var(--color-text-secondary);
+  font-size: 0.78rem;
+  cursor: pointer;
 }
 
 .filter-panel__clear:hover {
   color: var(--color-text-primary);
+}
 
-  border-color: rgba(255, 255, 255, 0.18);
+.filter-panel__clear:hover {
+  color: var(--color-text-primary);
 }

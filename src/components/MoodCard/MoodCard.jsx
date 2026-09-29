@@ -1,14 +1,56 @@
+import {
+  CloudSun,
+  Heart,
+  Laugh,
+  Flame,
+  Brain,
+  Compass,
+  Sparkles,
+  Flower2,
+} from 'lucide-react';
 import './MoodCard.css';
 
-export default function MoodCard({ mood, selected, onSelect }) {
+const moodIcons = {
+  comforting: CloudSun,
+  emotional: Heart,
+  funny: Laugh,
+  romantic: Flower2,
+  intense: Flame,
+  reflective: Brain,
+  adventurous: Compass,
+  nostalgic: Sparkles,
+};
+
+export default function MoodCard({
+  mood,
+  selected,
+  onSelect,
+}) {
+  const Icon = moodIcons[mood.id] || Sparkles;
+
   return (
     <button
-      className={`mood-card ${selected ? 'mood-card--selected' : ''}`}
+      type='button'
+      className={`mood-card ${
+        selected
+          ? 'mood-card--selected'
+          : ''
+      }`}
       onClick={() => onSelect(mood.id)}
     >
-      <h3>{mood.name}</h3>
+      <div className='mood-card__icon'>
+        <Icon size={20} />
+      </div>
 
-      <p>{mood.description}</p>
+      <div className='mood-card__content'>
+        <h3 className='mood-card__title'>
+          {mood.name}
+        </h3>
+
+        <p className='mood-card__description'>
+          {mood.description}
+        </p>
+      </div>
     </button>
   );
 }

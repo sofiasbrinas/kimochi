@@ -37,6 +37,7 @@ const ANIME_QUERY = `
         }
 
         coverImage {
+          extraLarge
           large
           color
         }
